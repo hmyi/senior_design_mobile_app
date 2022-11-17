@@ -1,13 +1,13 @@
-import {StatusBar} from 'expo-status-bar';
+// import {StatusBar} from 'expo-status-bar';
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, View, Button, Image, TextInput} from 'react-native';
+import {StyleSheet, Text, View, Button, Image, TextInput, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import {Camera} from 'expo-camera';
 
 export default function App() {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
-  const [type, setType] = useState(null);
+  const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
 
   const [iteration, setIteration] = useState(10);
   const [wait, setWait] = useState(250);
@@ -38,33 +38,37 @@ export default function App() {
       <View style={styles.cameraContainer}>
         <Camera 
           ref={ref => setCamera(ref)}
-          style={styles.fixedRatio} 
-          type={type}
+          type={cameraType}
           ratio={'1:1'}
+          style={styles.fixedRatio}
         />
       </View>
 
-      <Text>Enter number of pictures:</Text>
+      <Text style={styles.text}>Number of photos:</Text>
 
       <TextInput
-        style={styles.input}
         value={iteration}
         onChangeText={(value) => setIteration(value)}
+        keyboardType="numeric"
+        returnKeyType="done"
+        style={styles.textInput}
       />
 
-      <Text>Enter wait time between pictures (in ms):</Text>
+      <Text style={styles.text}>Time between photos in ms:</Text>
 
       <TextInput
-        style={styles.input}
         value={wait}
         onChangeText={(value) => setWait(value)}
+        keyboardType="numeric"
+        returnKeyType="done"
+        style={styles.textInput}
       />
 
       {/* <Button
         title = "Flip Camera"
         onPress={() => {
-          setType(
-            type === Camera.Constants.Type.back
+          setCameraType(
+            cameraType === Camera.Constants.Type.back
               ? Camera.Constants.Type.front
               : Camera.Constants.Type.back
           );
@@ -72,7 +76,7 @@ export default function App() {
       </Button> */}
 
       <Button
-        title="Start Taking Pictures"
+        title='Start Taking Photos'
         onPress={() => takePicture()}
       />
 
@@ -91,17 +95,33 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 40
   },
-  input: {
-    borderColor: "gray",
-    width: "100%",
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 10,
-  },
   cameraContainer: {
     flex: 1,
     flexDirection: 'row'
   },
+  text: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: 'bold',
+    letterSpacing: 0.25,
+    color: 'black'
+  },
+  textInput: {
+    borderColor: 'gray',
+    width: '100%',
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 5
+  },
+  // button: {
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   paddingVertical: 12,
+  //   paddingHorizontal: 32,
+  //   borderRadius: 4,
+  //   elevation: 3,
+  //   backgroundColor: 'black',
+  // },
   fixedRatio: {
     flex: 1,
     aspectRatio: 1
